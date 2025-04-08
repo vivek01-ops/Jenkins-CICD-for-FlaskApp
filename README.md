@@ -35,7 +35,3 @@ This project demonstrates how to automatically build, dockerize, and deploy a Fl
 - Manually trigger a new build in Jenkins or configure GitHub Webhooks for automatic build triggers.
 
 - Check the Console Output in Jenkins to confirm it’s using the new pipeline steps.
-
-
-
-[MIT](https://choosealicense.com/licenses/mit/)
