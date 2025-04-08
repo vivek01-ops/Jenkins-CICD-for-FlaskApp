@@ -29,7 +29,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 echo 'Deploying Application...'
-                sh 'docker run -d -p 5000:5000 --name flaskwebapp_container flaskwebapp:latest'
+                sh 'docker run -d -p 5000:5000 flaskwebapp:latest'
             }
         }
 
