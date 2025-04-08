@@ -43,7 +43,7 @@ pipeline {
                     sleep 2
 
                     echo "Running new container..."
-                    docker run -d -p 5000:5000 --name flaskwebapp_container flaskwebapp:latest
+                    docker run -d --name flaskwebapp_container flaskwebapp:latest
                 '''
     }
             }
