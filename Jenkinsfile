@@ -2,7 +2,6 @@ pipeline {
     agent any
 
     environment {
-        DOCKERHUB_CREDENTIALS = credentials('DOCKER_HUB_CREDENTIALS') // this ID from Jenkins Credentials
         DOCKERHUB_REPO = 'vivek512/flaskwebapp'  // replace with your DockerHub repo
     }
 
@@ -37,9 +36,11 @@ pipeline {
         stage('Docker Hub Login') {
             steps {
                 echo 'Logging into Docker Hub...'
-                sh '''
-                    echo "$DOCKERHUB_CREDENTIALS" | docker login -u "$DOCKERHUB_CREDENTIALS" --password-stdin
-                '''
+                withCredentials([usernamePassword(credentialsId: 'DOCKER_HUB_CREDENTIALS', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                    sh '''
+                        echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+                    '''
+                }
             }
         }
 
