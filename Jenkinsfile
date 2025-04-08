@@ -1,19 +1,18 @@
 pipeline {
     agent any
 
-    stages {
-        stage('Checkout') {
-            steps {
-                git scm
-            }
-        }
-    }
-    
+
     stages {
         stage('Build') {
             steps {
                 echo 'Building Docker Image...'
                 sh 'docker build -t myapp:latest .'
+            }
+        }
+
+        stage('Checkout') {
+            steps {
+                git scm
             }
         }
 
