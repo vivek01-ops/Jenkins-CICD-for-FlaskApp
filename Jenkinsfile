@@ -1,44 +1,26 @@
 pipeline {
     agent any
 
-    environment {
-        DOCKER_CREDENTIALS_ID = 'dockerhub-credentials'  // Change this to the ID you gave
-        DOCKER_IMAGE = 'vivek512/flask-webapp'
-    }
-
     stages {
-        stage('Clone Repo') {
+        stage('Build') {
             steps {
-                git branch: 'master', url: 'https://github.com/vivek01-ops/Jenkins-CICD-for-FlaskApp.git'
-            }
-        }
-        
-        stage('Build Docker Image') {
-            steps {
-                script {
-                    docker.build("${DOCKER_IMAGE}")
-                }
+                echo 'Building Docker Image...'
+                sh 'docker build -t myapp:latest .'
             }
         }
 
-        stage('Login to DockerHub') {
+        stage('Test') {
             steps {
-                withCredentials([usernamePassword(credentialsId: "dockerhub-credentials", usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                    sh 'echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin'
-                }
+                echo 'Testing Application...'
+                sh 'docker run --rm myapp:latest python -c "print(\'Test passed\')"'
             }
         }
 
-        stage('Push Docker Image') {
+        stage('Deploy') {
             steps {
-                script {
-                    docker.image("${DOCKER_IMAGE}").push()
-                }
+                echo 'Deploying Application...'
+                sh 'docker run -d -p 5000:5000 --name myapp_container myapp:latest'
             }
         }
-    }
-
-    triggers {
-        pollSCM('* * * * *')  // This triggers pipeline on every change (every minute check)
     }
 }

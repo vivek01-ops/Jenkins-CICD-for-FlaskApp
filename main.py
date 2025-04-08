@@ -27,7 +27,7 @@ def home():
             </head>
             <body>
                 <h1>Hello, DevOps World! 🚀</h1>
-                <p>Welcome to my awesome Flask app.</p>
+                <p>Welcome to Flask app.</p>
                 <p>Click <a href="/about">here</a> to learn more!</p>
             </body>
         </html>
