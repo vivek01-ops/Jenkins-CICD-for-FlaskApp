@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     environment {
-        DOCKERHUB_CREDENTIALS = credentials('dockerhub') // this ID from Jenkins Credentials
-        DOCKERHUB_REPO = 'vivekchaudhari/myapp'  // replace with your DockerHub repo
+        DOCKERHUB_CREDENTIALS = credentials('DOCKER_HUB_CREDENTIALS') // this ID from Jenkins Credentials
+        DOCKERHUB_REPO = 'vivek512/flaskWebApp'  // replace with your DockerHub repo
     }
 
     stages {
@@ -38,7 +38,7 @@ pipeline {
             steps {
                 echo 'Logging into Docker Hub...'
                 sh '''
-                    echo "$DOCKER_HUB_CREDENTIALS" | docker login -u "$DOCKER_HUB_CREDENTIALS" --password-stdin
+                    echo "$DOCKERHUB_CREDENTIALS" | docker login -u "$DOCKERHUB_CREDENTIALS" --password-stdin
                 '''
             }
         }
@@ -47,8 +47,8 @@ pipeline {
             steps {
                 echo 'Tagging and Pushing Image to Docker Hub...'
                 sh '''
-                    docker tag flaskWebApp:latest $DOCKER_HUB_CREDENTIALS/flaskWebApp:latest
-                    docker push $$DOCKER_HUB_CREDENTIALS/flaskWebApp:latest
+                    docker tag flaskWebApp:latest $DOCKERHUB_REPO/flaskWebApp:latest
+                    docker push $DOCKERHUB_REPO/flaskWebApp:latest
                 '''
             }
         }
