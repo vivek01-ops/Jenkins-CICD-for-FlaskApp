@@ -10,11 +10,11 @@ pipeline {
             }
         }
 
-        stage('Checkout') {
-            steps {
-                git scm
-            }
-        }
+        // stage('Checkout') {
+        //     steps {
+        //         git scm
+        //     }
+        // }
 
         stage('Test') {
             steps {
