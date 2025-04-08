@@ -30,11 +30,16 @@ pipeline {
             steps {
                 echo 'Deploying Application...'
                 sh '''
-                    # Stop and remove old container if running
+                    echo "Killing any process using port 5000..."
+                    fuser -k 5000/tcp || true
+
+                    echo "Stopping old container if exists..."
                     docker stop flaskwebapp_container || true
+
+                    echo "Removing old container if exists..."
                     docker rm flaskwebapp_container || true
 
-                    # Run new container
+                    echo "Running new container..."
                     docker run -d -p 5000:5000 --name flaskwebapp_container flaskwebapp:latest
                 '''
             }
