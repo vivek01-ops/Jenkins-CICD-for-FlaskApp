@@ -28,7 +28,7 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                echo 'Deploying Application...'
+                echo 'Deploying...'
                 sh '''
                     echo "Running new container..."
                     docker run -d flaskwebapp:latest
