@@ -31,7 +31,7 @@ pipeline {
                 echo 'Deploying...'
                 sh '''
                     echo "Running new container..."
-                    docker run -d flaskwebapp:latest
+                    docker run -d -p 5000:5000 flaskwebapp:latest
                 '''
             }
         }
