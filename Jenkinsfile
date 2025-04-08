@@ -2,56 +2,43 @@ pipeline {
     agent any
 
     environment {
-        DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials-id') // Jenkins Credentials ID
-        DOCKERHUB_REPO = 'yourdockerhubusername/yourappname'
-    }
-
-    triggers {
-        pollSCM('* * * * *')  // Poll GitHub every minute for changes
+        DOCKER_CREDENTIALS_ID = 'dockerhub-credentials'  // Change this to the ID you gave
+        DOCKER_IMAGE = 'vivek512/flask-webapp'
     }
 
     stages {
-        stage('Clone repository') {
+        stage('Clone Repo') {
             steps {
-                git branch: 'main', url: 'https://github.com/yourusername/your-repo.git'
+                git branch: 'master', url: 'https://github.com/vivek01-ops/Jenkins-CICD-for-FlaskApp.git'
             }
         }
-
+        
         stage('Build Docker Image') {
             steps {
                 script {
-                    dockerImage = docker.build("${DOCKERHUB_REPO}:${BUILD_NUMBER}")
+                    docker.build("${DOCKER_IMAGE}")
                 }
             }
         }
 
         stage('Login to DockerHub') {
             steps {
-                script {
-                    docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials-id') {
-                        echo 'Logged in to DockerHub'
-                    }
+                withCredentials([usernamePassword(credentialsId: "dockerhub-credentials", usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                    sh 'echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin'
                 }
             }
         }
 
-        stage('Push Image to DockerHub') {
+        stage('Push Docker Image') {
             steps {
                 script {
-                    docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials-id') {
-                        dockerImage.push()
-                    }
+                    docker.image("${DOCKER_IMAGE}").push()
                 }
             }
         }
     }
 
-    post {
-        success {
-            echo '✅ Build and Push successful!'
-        }
-        failure {
-            echo '❌ Build or Push failed.'
-        }
+    triggers {
+        pollSCM('* * * * *')  // This triggers pipeline on every change (every minute check)
     }
 }
