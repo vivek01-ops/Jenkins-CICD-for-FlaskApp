@@ -39,9 +39,13 @@ pipeline {
                     echo "Removing old container if exists..."
                     docker rm flaskwebapp_container || true
 
+                    echo "Waiting for port to free up..."
+                    sleep 2
+
                     echo "Running new container..."
                     docker run -d -p 5000:5000 --name flaskwebapp_container flaskwebapp:latest
                 '''
+    }
             }
         }
 
