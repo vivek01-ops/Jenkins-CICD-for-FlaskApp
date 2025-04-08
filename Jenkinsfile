@@ -3,14 +3,14 @@ pipeline {
 
     environment {
         DOCKERHUB_CREDENTIALS = credentials('DOCKER_HUB_CREDENTIALS') // this ID from Jenkins Credentials
-        DOCKERHUB_REPO = 'vivek512/flaskWebApp'  // replace with your DockerHub repo
+        DOCKERHUB_REPO = 'vivek512/flaskwebapp'  // replace with your DockerHub repo
     }
 
     stages {
         stage('Build') {
             steps {
                 echo 'Building Docker Image...'
-                sh 'docker build -t flaskWebApp:latest .'
+                sh 'docker build -t flaskwebapp:latest .'
             }
         }
 
@@ -23,14 +23,14 @@ pipeline {
         stage('Test') {
             steps {
                 echo 'Testing Application...'
-                sh 'docker run --rm flaskWebApp:latest python -c "print(\'Test passed\')"'
+                sh 'docker run --rm flaskwebapp:latest python -c "print(\'Test passed\')"'
             }
         }
 
         stage('Deploy') {
             steps {
                 echo 'Deploying Application...'
-                sh 'docker run -d -p 5000:5000 --name flaskWebApp_container flaskWebApp:latest'
+                sh 'docker run -d -p 5000:5000 --name flaskwebapp_container flaskwebapp:latest'
             }
         }
 
@@ -47,8 +47,8 @@ pipeline {
             steps {
                 echo 'Tagging and Pushing Image to Docker Hub...'
                 sh '''
-                    docker tag flaskWebApp:latest $DOCKERHUB_REPO/flaskWebApp:latest
-                    docker push $DOCKERHUB_REPO/flaskWebApp:latest
+                    docker tag flaskwebapp:latest $DOCKERHUB_REPO/flaskwebapp:latest
+                    docker push $DOCKERHUB_REPO/flaskwebapp:latest
                 '''
             }
         }
