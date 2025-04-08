@@ -45,10 +45,9 @@ pipeline {
                     echo "Running new container..."
                     docker run -d --name flaskwebapp_container flaskwebapp:latest
                 '''
-    }
             }
         }
-
+        
         stage('Docker Hub Login') {
             steps {
                 echo 'Logging into Docker Hub...'
