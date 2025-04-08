@@ -29,7 +29,14 @@ pipeline {
         stage('Deploy') {
             steps {
                 echo 'Deploying Application...'
-                sh 'docker run -d -p 5000:5000 flaskwebapp:latest'
+                sh '''
+                    # Stop and remove old container if running
+                    docker stop flaskwebapp_container || true
+                    docker rm flaskwebapp_container || true
+
+                    # Run new container
+                    docker run -d -p 5000:5000 --name flaskwebapp_container flaskwebapp:latest
+                '''
             }
         }
 
@@ -38,12 +45,8 @@ pipeline {
                 echo 'Logging into Docker Hub...'
                 withCredentials([usernamePassword(credentialsId: 'DOCKER_HUB_CREDENTIALS', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                     sh '''
-                        # Stop and remove old container if running
-                        docker stop flaskwebapp_container || true
-                        docker rm flaskwebapp_container || true
-
-                        # Run new container
-                        docker run -d -p 5000:5000 --name flaskwebapp_container flaskwebapp:latest
+                        echo "Docker Username: $DOCKER_USERNAME"
+                        echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
                     '''
                 }
             }
