@@ -13,11 +13,11 @@ pipeline {
             }
         }
 
-        // stage('Checkout') {
-        //     steps {
-        //         git scm
-        //     }
-        // }
+        stage('Checkout') {
+            steps {
+                checkout scmGit(branches: [[name: 'master']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/vivek01-ops/Jenkins-CICD-for-FlaskApp.git']])
+            }
+        }
 
         stage('Test') {
             steps {
